@@ -1,6 +1,8 @@
 # 🧾 Notax — Auditoria Fiscal Automática  
 ### *"Auditoria fiscal automática, simples e inteligente."*
 
+[![logo.png](https://i.postimg.cc/BvcxpN36/Chat-GPT-Image-18-de-nov-de-2025-13-50-19.png)](https://postimg.cc/06jM2YbR)
+
 O **Notax** é um MicroSaaS criado para simplificar a auditoria e organização de **notas fiscais eletrônicas**.  
 O objetivo é transformar um processo complexo em algo simples, automático e acessível para pequenos negócios, contadores e profissionais que lidam com documentos fiscais diariamente.
 
