@@ -1,0 +1,7 @@
+FastAPI 
+SQLAlchemy
+psycopg2-binary
+xmltodict
+ReportLab
+Streamlit
+Pydantic
