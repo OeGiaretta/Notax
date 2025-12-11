@@ -5,3 +5,4 @@ xmltodict
 ReportLab
 Streamlit
 Pydantic
+pydantic-settings

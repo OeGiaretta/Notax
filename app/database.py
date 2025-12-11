@@ -1,17 +1,9 @@
-import os, dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-
-dotenv.load_dotenv()
-
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_DB = os.getenv("POSTGRES_DB")
-
-db_ALCHEMY_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/{POSTGRES_DB}"
+from app.config import settings
 
 engine = create_engine(
-    db_ALCHEMY_URL,
+    settings.database_url,
     pool_pre_ping=True,
 )
 
@@ -21,7 +13,7 @@ SessionLocal = sessionmaker(
     bind=engine
 )
 
-base = declarative_base()
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()
