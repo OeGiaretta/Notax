@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
-from app.services.xml_parser import parse_xml_content
+
 from app.services.validator import validate_invoice_data
+from app.services.xml_parser import parse_xml_content
 
 router = APIRouter(prefix="/invoices", tags=["Invoices"])
 
@@ -28,5 +29,5 @@ async def validate_xml(file: UploadFile = File(...)):
     return {
         "filename": file.filename,
         "parsed_data": parsed["data"],
-        "validation": validation.model_dump()
+        "validation": validation.model_dump(),
     }
