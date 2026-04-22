@@ -1,4 +1,5 @@
 from  fastapi import APIRouter, File, HTTPException ,UploadFile
+from app.services.xml_parser import parse_xml_content
 
 router = APIRouter(
     prefix="/invoices",
@@ -18,9 +19,12 @@ async def validate_xml(file: UploadFile = File(...)):
     if not content:
         raise HTTPException(status_code=400, detail="Empty file uploaded")
     
-    return{
-         "filename": file.filename,
-         "content_type": file.content_type,
-         "size_bytes": len(content),
-         "message": "File received successfully"
+    parsed = parse_xml_content(content)
+
+    if not parsed["success"]:
+        raise HTTPException(status_code=400, detail=parsed["error"])
+
+    return {
+        "filename": file.filename,
+        "parsed_data": parsed["data"]
     }
