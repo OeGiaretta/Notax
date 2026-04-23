@@ -1,71 +1,110 @@
-# 🧾 Notax — Auditoria Fiscal Automática  
-### *"Auditoria fiscal automática, simples e inteligente."*
+# Notax
 
-[![logo.png](https://i.postimg.cc/BvcxpN36/Chat-GPT-Image-18-de-nov-de-2025-13-50-19.png)](https://postimg.cc/06jM2YbR)
+Automated invoice validation API for Brazilian NF-e (Nota Fiscal Eletrônica) documents.
 
-O **Notax** é um MicroSaaS criado para simplificar a auditoria e organização de **notas fiscais eletrônicas**.  
-O objetivo é transformar um processo complexo em algo simples, automático e acessível para pequenos negócios, contadores e profissionais que lidam com documentos fiscais diariamente.
-
-Com o Notax, o usuário envia seus arquivos fiscais e recebe relatórios claros, objetivos e confiáveis — economizando tempo, reduzindo erros e trazendo mais segurança ao processo.
+Notax processes XML files, extracts structured data, and evaluates invoice quality using rule-based validation and scoring.
 
 ---
 
-## 🎯 Objetivo do Projeto
+## 🚀 Features
 
-O Notax existe para:
-
-- Automatizar a conferência de notas fiscais  
-- Facilitar a identificação de erros e inconsistências  
-- Reduzir o tempo gasto em revisões manuais  
-- Ajudar empresas e contadores a manterem conformidade fiscal  
-- Oferecer uma experiência intuitiva, mesmo para quem não domina o tema fiscal  
-
----
-
-## 👥 Para Quem é o Notax?
-
-- **MEIs e pequenos negócios**  
-- **Contadores e escritórios contábeis**  
-- **Empresas que recebem muitas notas fiscais**  
-- **Profissionais autônomos que desejam organizar documentos fiscais**  
+- Upload and parse NF-e XML files
+- Extract structured invoice data
+- Validate required fields and item consistency
+- Apply rule-based validation with severity levels
+- Generate a quality score for each invoice
+- Modular validation engine (scalable architecture)
 
 ---
 
-## 🔍 Como o Notax Funciona (Visão Geral)
+## 📦 Example Response
 
-1. O usuário envia arquivos contendo suas notas fiscais (ex.: XML).  
-2. O Notax processa automaticamente os documentos.  
-3. O sistema identifica possíveis erros, divergências ou informações incompletas.  
-4. Um relatório simples e claro é gerado com os principais pontos observados.  
-
-Nenhuma configuração complexa. Nenhum conhecimento técnico avançado.  
-Apenas praticidade.
+```json
+{
+  "filename": "invoice.xml",
+  "parsed_data": {
+    "invoice_number": "12345",
+    "issued_at": "2026-04-22T10:00:00-03:00",
+    "issuer_cnpj": "12345678000199",
+    "issuer_name": "Empresa Emitente LTDA",
+    "recipient_cnpj": "98765432000188",
+    "recipient_name": "Cliente Teste",
+    "total_value": "100.00",
+    "items": [
+      {
+        "code": "001",
+        "name": "Produto Teste",
+        "ncm": "12345678",
+        "cfop": "5102",
+        "value": "100.00"
+      }
+    ]
+  },
+  "validation": {
+    "status": "ok",
+    "score": 100,
+    "summary": {
+      "total_issues": 0,
+      "errors": 0,
+      "warnings": 0,
+      "info": 0
+    },
+    "issues": []
+  }
+}
+```
 
 ---
 
-## 🚀 Visão de Futuro
+## 🧠 Architecture
 
-O projeto pretende evoluir para incluir:
-
-- Painel online com histórico e gráficos  
-- Relatórios mais completos e personalizáveis  
-- Integração com ERPs e prefeituras  
-- API pública para automações fiscais  
-- Suporte ampliado para diferentes documentos (NFe, NFSe, NFC-e, CT-e etc.)  
-
----
-
-## 📝 Licença
-
-Este projeto está licenciado sob a **MIT License**.  
+```
+app/
+├── api/            # API routes (FastAPI)
+├── services/       # Business logic (parser, validator)
+├── core/rules/     # Validation rules (modularized)
+├── schemas/        # Data models (Pydantic)
+```
 
 ---
 
-## 📬 Contato
+## 🛠️ Tech Stack
 
-Para sugestões, melhorias ou ideias sobre o Notax:
-
-**Email:** [eduhgiaretta@gmail.com](mailto:eduhgiaretta@gmail.com)
-**GitHub:** [https://github.com/OeGiaretta](https://github.com/OeGiaretta)
+- Python 3
+- FastAPI
+- Pydantic
+- xmltodict
+- Uvicorn
 
 ---
+
+## ▶️ Running Locally
+
+```bash
+git clone https://github.com/OeGiaretta/Notax.git
+cd Notax
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+---
+
+## 🧪 Testing
+
+Use Swagger UI at:
+http://localhost:8000/docs
+
+---
+
+## 🔮 Roadmap
+
+- Advanced validation rules
+- Database persistence
+- Batch processing
+- Dashboard
+
+---
+
+## 📄 License
+
+MIT License
