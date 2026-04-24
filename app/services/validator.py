@@ -1,9 +1,14 @@
+from app.core.rules.financial_rules import validate_financial_rules
+from app.core.rules.item_rules import validate_item_rules
+from app.core.rules.required_fields import validate_required_fields
+from app.core.rules.cnpj_rules import validate_cnpj_rules
+from app.core.rules.date_rules import validate_date_rules
+
 from app.schemas.validation import (
     ValidationIssue,
     ValidationResult,
     ValidationSummary,
 )
-
 
 def calculate_score(issues: list[ValidationIssue]) -> int:
     score = 100
@@ -43,124 +48,14 @@ def build_summary(issues: list[ValidationIssue]) -> ValidationSummary:
         info=info,
     )
 
-
 def validate_invoice_data(data: dict) -> ValidationResult:
     issues: list[ValidationIssue] = []
 
-    if not data.get("invoice_number"):
-        issues.append(
-            ValidationIssue(
-                code="MISSING_INVOICE_NUMBER",
-                message="Invoice number is missing.",
-                severity="error",
-                field="invoice_number",
-            )
-        )
-
-    if not data.get("issuer_cnpj"):
-        issues.append(
-            ValidationIssue(
-                code="MISSING_ISSUER_CNPJ",
-                message="Issuer CNPJ is missing.",
-                severity="error",
-                field="issuer_cnpj",
-            )
-        )
-
-    if not data.get("recipient_cnpj"):
-        issues.append(
-            ValidationIssue(
-                code="MISSING_RECIPIENT_CNPJ",
-                message="Recipient CNPJ is missing.",
-                severity="error",
-                field="recipient_cnpj",
-            )
-        )
-
-    total_value = data.get("total_value")
-    if not total_value:
-        issues.append(
-            ValidationIssue(
-                code="MISSING_TOTAL_VALUE",
-                message="Total value is missing.",
-                severity="error",
-                field="total_value",
-            )
-        )
-    elif total_value in ["0", "0.00", 0, 0.0]:
-        issues.append(
-            ValidationIssue(
-                code="ZERO_TOTAL_VALUE",
-                message="Total value is zero.",
-                severity="warning",
-                field="total_value",
-            )
-        )
-
-    items = data.get("items", [])
-
-    if not items:
-        issues.append(
-            ValidationIssue(
-                code="MISSING_ITEMS",
-                message="No items found in invoice.",
-                severity="error",
-                field="items",
-            )
-        )
-
-    for index, item in enumerate(items, start=1):
-        prefix = f"items[{index - 1}]"
-
-        if not item.get("code"):
-            issues.append(
-                ValidationIssue(
-                    code="MISSING_ITEM_CODE",
-                    message=f"Item {index} is missing product code.",
-                    severity="warning",
-                    field=f"{prefix}.code",
-                )
-            )
-
-        if not item.get("name"):
-            issues.append(
-                ValidationIssue(
-                    code="MISSING_ITEM_NAME",
-                    message=f"Item {index} is missing product name.",
-                    severity="warning",
-                    field=f"{prefix}.name",
-                )
-            )
-
-        if not item.get("ncm"):
-            issues.append(
-                ValidationIssue(
-                    code="MISSING_NCM",
-                    message=f"Item {index} is missing NCM.",
-                    severity="error",
-                    field=f"{prefix}.ncm",
-                )
-            )
-
-        if not item.get("cfop"):
-            issues.append(
-                ValidationIssue(
-                    code="MISSING_CFOP",
-                    message=f"Item {index} is missing CFOP.",
-                    severity="error",
-                    field=f"{prefix}.cfop",
-                )
-            )
-
-        if not item.get("value"):
-            issues.append(
-                ValidationIssue(
-                    code="MISSING_ITEM_VALUE",
-                    message=f"Item {index} is missing product value.",
-                    severity="warning",
-                    field=f"{prefix}.value",
-                )
-            )
+    issues.extend(validate_required_fields(data))
+    issues.extend(validate_financial_rules(data))
+    issues.extend(validate_item_rules(data))
+    issues.extend(validate_cnpj_rules(data))
+    issues.extend(validate_date_rules(data))
 
     summary = build_summary(issues)
     score = calculate_score(issues)

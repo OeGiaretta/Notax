@@ -42,13 +42,11 @@ def validate_financial_rules(data: dict) -> list[ValidationIssue]:
     items = data.get("items", [])
     item_values: list[Decimal] = []
 
-    for index, item in enumerate(items, start=1):
+    for item in items:
         item_value = parse_decimal(item.get("value"))
 
-        if item_value is None:
-            continue
-
-        item_values.append(item_value)
+        if item_value is not None:
+            item_values.append(item_value)
 
     if item_values:
         items_total = sum(item_values, Decimal("0.00"))

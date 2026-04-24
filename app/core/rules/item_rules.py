@@ -1,5 +1,6 @@
 from app.schemas.validation import ValidationIssue
 
+
 def validate_item_rules(data: dict) -> list[ValidationIssue]:
     issues: list[ValidationIssue] = []
 
@@ -19,13 +20,10 @@ def validate_item_rules(data: dict) -> list[ValidationIssue]:
     for index, item in enumerate(items, start=1):
         prefix = f"items[{index - 1}]"
 
-        item_code = item.get("code")
-        item_name = item.get("name")
         ncm = item.get("ncm")
         cfop = item.get("cfop")
-        value = item.get("value")
 
-        if not item_code:
+        if not item.get("code"):
             issues.append(
                 ValidationIssue(
                     code="MISSING_ITEM_CODE",
@@ -35,7 +33,7 @@ def validate_item_rules(data: dict) -> list[ValidationIssue]:
                 )
             )
 
-        if not item_name:
+        if not item.get("name"):
             issues.append(
                 ValidationIssue(
                     code="MISSING_ITEM_NAME",
@@ -83,7 +81,7 @@ def validate_item_rules(data: dict) -> list[ValidationIssue]:
                 )
             )
 
-        if not value:
+        if not item.get("value"):
             issues.append(
                 ValidationIssue(
                     code="MISSING_ITEM_VALUE",
